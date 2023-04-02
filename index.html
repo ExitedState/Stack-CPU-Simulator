@@ -36,6 +36,7 @@
 
 				document.getElementById("mem" + addr).value = n1.toString(16);
 
+
 			} else if (ir == "opcode1") {		// +
 
 				n2 = parseInt(document.getElementById("ds" + ds).innerHTML, 16);
@@ -210,9 +211,7 @@
 			}
 		}
 	</script>
-</head>
 
-<body>
 	<b>Stack CPU Simulator (16-bit)</b><br>
 	<br>
 	<input type="button" value=" Step " onclick="javascript:Step()">
@@ -282,7 +281,9 @@
 				document.write('</tr>');
 			}
 		</script>
-	</table <br>
+	</table> <br>
+</head>
+<body>
 	<input type="button" value=" Step " onclick="javascript:Step()">
 	<input type="button" value=" Reset " onclick="javascript:Reset()">
 	<input type="button" value=" Reset and Clear Memory " onclick="javascript:ResetAndClearMem()">
