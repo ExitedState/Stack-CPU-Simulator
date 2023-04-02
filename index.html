@@ -33,9 +33,9 @@
 				n1 = parseInt(document.getElementById("ds" + ds).innerHTML, 16);
 				document.getElementById("ds" + ds).innerHTML = "&nbsp;";
 				ds = parseInt(ds) + 1;
-
-				document.getElementById("mem" + addr).value = n1.toString(16);
-
+				n1 = n1.toString(16).toUpperCase();
+				document.getElementById("mem" + addr).value = n1.length == 1 ? "0" + n1 : n1;
+				console.log("mem[" + addr + "] = " + (n1.toString(16)).toUpperCase());
 
 			} else if (ir == "opcode1") {		// +
 
@@ -283,6 +283,7 @@
 		</script>
 	</table> <br>
 </head>
+
 <body>
 	<input type="button" value=" Step " onclick="javascript:Step()">
 	<input type="button" value=" Reset " onclick="javascript:Reset()">
