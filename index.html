@@ -269,10 +269,12 @@
             numRows = parseInt(document.getElementById("row-count-input").value) || ds;
             numRows = Math.max(5, Math.min(numRows, 64));
             document.getElementById("table-body").innerHTML = createTableRows(numRows);
+            Reset();
         }
 
         document.addEventListener("DOMContentLoaded", () => {
             document.getElementById("table-body").innerHTML = createTableRows(ds);
+            Reset();
         });
     </script>
 </head>
