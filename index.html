@@ -280,6 +280,7 @@
         function updateTableRows() {
             numRows = parseInt(document.getElementById("row-count-input").value) || ds;
             numRows = Math.max(5, Math.min(numRows, 64));
+            document.getElementById("row-count-input").value = numRows;
             document.getElementById("table-body").innerHTML = createTableRows(numRows);
             document.getElementById("data-stack-body").innerHTML = createStackRows(numRows, 'ds');
             document.getElementById("return-stack-body").innerHTML = createStackRows(numRows, 'rs');
@@ -362,10 +363,11 @@
             </div>
         </div>
     </div>
-    <br>
     <input type="button" value=" Step " onclick="Step()">
     <input type="button" value=" Reset " onclick="Reset()">
     <input type="button" value=" Reset and Clear Memory " onclick="ResetAndClearMem()">
+    <p style="float: right;">Source code : <a href="https://github.com/ExitedState/StackCPU_upgrade" target="_blank">GitHub</a></p>
+
 </body>
 
 </html>
