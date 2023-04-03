@@ -317,6 +317,9 @@
         }
     </style>
     <b>Stack CPU Simulator (16-bit)</b><br><br>
+    <input type="button" value=" Step " onclick="Step()">
+    <input type="button" value=" Reset " onclick="Reset()">
+    <input type="button" value=" Reset and Clear Memory " onclick="ResetAndClearMem()">
     Number of Address (5-64): <input type="number" id="row-count-input" value="32" min="5" max="64">
     <input type="button" value="Apply" onclick="updateTableRows()">
     <br><br>
@@ -363,10 +366,8 @@
             </div>
         </div>
     </div>
-    <input type="button" value=" Step " onclick="Step()">
-    <input type="button" value=" Reset " onclick="Reset()">
-    <input type="button" value=" Reset and Clear Memory " onclick="ResetAndClearMem()">
-    <p style="float: right;">Source code : <a href="https://github.com/ExitedState/StackCPU_upgrade" target="_blank">GitHub</a></p>
+    <p style="float: right;">Source code : <a href="https://github.com/ExitedState/StackCPU_upgrade"
+            target="_blank">GitHub</a></p>
 
 </body>
 
