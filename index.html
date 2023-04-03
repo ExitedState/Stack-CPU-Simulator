@@ -275,9 +275,11 @@
 
         document.addEventListener("DOMContentLoaded", () => {
             const savedNumRows = localStorage.getItem('numRows');
+            let numRows;
             if (savedNumRows) {
                 numRows = parseInt(savedNumRows);
-                document.getElementById("row-count-input").value = numRows;
+            } else {
+                numRows = 32; // Default value when first loading the website
             }
             document.getElementById("table-body").innerHTML = createTableRows(numRows);
             Reset();
@@ -290,7 +292,7 @@
     <input type="button" value=" Step " onclick="Step()">
     <input type="button" value=" Reset " onclick="Reset()">
     <input type="button" value=" Reset and Clear Memory " onclick="ResetAndClearMem()">
-    Number of Address (5-64): <input type="number" id="row-count-input" value="64" min="5" max="64">
+    Number of Address (5-64): <input type="number" id="row-count-input" value="32" min="5" max="64">
     <input type="button" value="Apply" onclick="updateTableRows()">
     <br><br>
     <table border="1" cellspacing="0" cellpadding="5" bordercolor="black">
