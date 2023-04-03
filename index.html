@@ -12,14 +12,14 @@
             var operand = "";
 
             document.getElementById("pc" + pc).innerHTML = "&nbsp;";
-            pc = (parseInt(pc) + 1) % ds;
+            pc = (parseInt(pc) + 1) % 64;
             document.getElementById("pc" + pc).innerHTML = "x";
 
             if (ir == "opcode13" || ir == "opcode14" || ir == "opcode16") { // IF, CALL, LIT
 
                 operand = document.getElementById("mem" + pc).value;
                 document.getElementById("pc" + pc).innerHTML = "&nbsp;";
-                pc = (parseInt(pc) + 1) % ds;
+                pc = (parseInt(pc) + 1) % 64;
                 document.getElementById("pc" + pc).innerHTML = "x";
             }
             // execute
