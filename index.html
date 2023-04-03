@@ -185,6 +185,7 @@
                 alert("Opcode is not found at address " + tmp);
             }
         }
+
         function Reset() {
             const numRows = parseInt(document.getElementById("row-count-input").value);
             pc = 0;
@@ -197,6 +198,7 @@
             }
             document.getElementById("pc0").innerHTML = "x";
         }
+
         function ResetAndClearMem() {
             var confirmation = confirm("Are you sure you want to reset the memory?");
             if (confirmation) {
@@ -207,20 +209,7 @@
                 }
             }
         }
-        function createTableRows(numRows) {
-            let html = "";
-            for (let i = 0; i < numRows; i++) {
-                let hexValue = i.toString(16).toUpperCase().padStart(2, '0');
-                html += `<tr>
-                    <td align="center"><span id="pc${i}">${i === 0 ? 'x' : '&nbsp;'}</span></td>
-                    <td align="center">x${hexValue}</td>
-                    <td align="center">${createMemorySelect(i)}</td>
-                    <td align="center"><span id="ds${i}">&nbsp;</span></td>
-                    <td align="center"><span id="rs${i}">&nbsp;</span></td>
-                </tr>`;
-            }
-            return html;
-        }
+
         function createMemorySelect(index) {
             let options = '';
             options += `<option value="opcode0">!</option>`;
@@ -264,38 +253,115 @@
             options += '<option value="00FF">x00FF (mask)</option>';
             return `<select id="mem${index}">${options}</select>`;
         }
+
+        function createTableRows(numRows) {
+            let html = "";
+            for (let i = 0; i < numRows; i++) {
+                let hexValue = i.toString(16).toUpperCase().padStart(2, '0');
+                html += `<tr>
+                    <td align="center" width="35px"><span id="pc${i}">${i === 0 ? 'x' : '&nbsp;'}</span></td>
+                    <td align="center" width="78px">x${hexValue}</td>
+                    <td align="center" width="110px">${createMemorySelect(i)}</td>
+                </tr>`;
+            }
+            return html;
+        }
+
+        function createStackRows(numRows, idPrefix) {
+            let html = "";
+            for (let i = 0; i < numRows; i++) {
+                html += `<tr>
+                    <td align="center"><span id="${idPrefix}${i}">&nbsp;</span></td>
+                </tr>`;
+            }
+            return html;
+        }
+
         function updateTableRows() {
             numRows = parseInt(document.getElementById("row-count-input").value) || ds;
             numRows = Math.max(5, Math.min(numRows, 64));
             document.getElementById("table-body").innerHTML = createTableRows(numRows);
+            document.getElementById("data-stack-body").innerHTML = createStackRows(numRows, 'ds');
+            document.getElementById("return-stack-body").innerHTML = createStackRows(numRows, 'rs');
             Reset();
         }
 
         document.addEventListener("DOMContentLoaded", () => {
             document.getElementById("table-body").innerHTML = createTableRows(ds);
+            document.getElementById("data-stack-body").innerHTML = createStackRows(ds, 'ds');
+            document.getElementById("return-stack-body").innerHTML = createStackRows(ds, 'rs');
             Reset();
         });
     </script>
 </head>
 
 <body>
+    <style>
+        .scrollable {
+            overflow-y: scroll;
+            height: 75vh;
+        }
+
+        ::-webkit-scrollbar {
+            width: 0px;
+            height: 0px;
+        }
+
+        table {
+            border-collapse: collapse;
+        }
+
+        tr:nth-child(odd) {
+            background-color: #858484;
+        }
+    </style>
     <b>Stack CPU Simulator (16-bit)</b><br><br>
-    <input type="button" value=" Step " onclick="Step()">
-    <input type="button" value=" Reset " onclick="Reset()">
-    <input type="button" value=" Reset and Clear Memory " onclick="ResetAndClearMem()">
     Number of Address (5-64): <input type="number" id="row-count-input" value="32" min="5" max="64">
     <input type="button" value="Apply" onclick="updateTableRows()">
     <br><br>
-    <table border="1" cellspacing="0" cellpadding="5" bordercolor="black">
-        <tr>
-            <td align="center">PC</td>
-            <td align="center">Address</td>
-            <td align="center">Memory</td>
-            <td align="center">Data Stack</td>
-            <td align="center">Return Stack</td>
-        </tr>
-        <tbody id="table-body"></tbody>
-    </table>
+    <div style="display: flex;">
+        <div>
+            <table border="1" cellspacing="1" cellpadding="5" bordercolor="black"
+                style="position: sticky; top: 0; width: 100%;">
+                <tr>
+                    <td align="center" style="width:22px;">PC</td>
+                    <td align="center" style="width:51px;">Address</td>
+                    <td align="center" style="width:76px;">Memory</td>
+                </tr>
+            </table>
+            <div class="scrollable">
+                <table border="1" cellspacing="1" cellpadding="5" bordercolor="black" style="width: 100%;">
+                    <tbody id="table-body"></tbody>
+                </table>
+            </div>
+        </div>
+        <div>
+            <table border="1" cellspacing="1" cellpadding="5" bordercolor="black"
+                style="position: sticky; top: 0; width: 100%;">
+                <tr>
+                    <td align="center" style="width: 100%;">Data Stack</td>
+                </tr>
+            </table>
+            <div class="scrollable">
+                <table border="1" cellspacing="1" cellpadding="5" bordercolor="black" style="width: 100%;">
+                    <tbody id="data-stack-body"></tbody>
+                </table>
+            </div>
+        </div>
+        <div>
+            <table border="1" cellspacing="1" cellpadding="5" bordercolor="black"
+                style="position: sticky; top: 1; width: 100%;">
+                <tr>
+                    <td align="center" style="width: 100%;">Return Stack</td>
+                </tr>
+            </table>
+            <div class="scrollable">
+                <table border="1" cellspacing="1" cellpadding="5" bordercolor="black" style="width: 100%;">
+                    <tbody id="return-stack-body"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
     <br>
     <input type="button" value=" Step " onclick="Step()">
     <input type="button" value=" Reset " onclick="Reset()">
