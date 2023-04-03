@@ -269,19 +269,10 @@
             numRows = Math.max(5, Math.min(numRows, 64));
             document.getElementById("table-body").innerHTML = createTableRows(numRows);
             Reset();
-            localStorage.setItem('numRows', numRows);
         }
 
         document.addEventListener("DOMContentLoaded", () => {
-            const savedNumRows = localStorage.getItem('numRows');
-            let numRows;
-            if (savedNumRows) {
-                numRows = parseInt(savedNumRows);
-                document.getElementById("row-count-input").value = numRows;
-            } else {
-                numRows = 32;
-            }
-            document.getElementById("table-body").innerHTML = createTableRows(numRows);
+            document.getElementById("table-body").innerHTML = createTableRows(ds);
             Reset();
         });
     </script>
