@@ -7,19 +7,20 @@
         let ds = 64;
         let rs = 64;
         function Step() {
+            const numRows = parseInt(document.getElementById("row-count-input").value) 
             // fetch
             var ir = document.getElementById("mem" + pc).value;
             var operand = "";
 
             document.getElementById("pc" + pc).innerHTML = "&nbsp;";
-            pc = (parseInt(pc) + 1) % 64;
+            pc = (parseInt(pc) + 1) % numRows;
             document.getElementById("pc" + pc).innerHTML = "x";
 
             if (ir == "opcode13" || ir == "opcode14" || ir == "opcode16") { // IF, CALL, LIT
 
                 operand = document.getElementById("mem" + pc).value;
                 document.getElementById("pc" + pc).innerHTML = "&nbsp;";
-                pc = (parseInt(pc) + 1) % 64;
+                pc = (parseInt(pc) + 1) % numRows;
                 document.getElementById("pc" + pc).innerHTML = "x";
             }
             // execute
@@ -186,9 +187,10 @@
             }
         }
         function Reset() {
+            const numRows = parseInt(document.getElementById("row-count-input").value);
             pc = 0;
-            ds = 64;
-            rs = 64;
+            ds = numRows;
+            rs = ds;
             for (var i = 0; i < ds; i++) {
                 document.getElementById("pc" + i).innerHTML = "&nbsp;";
                 document.getElementById("ds" + i).innerHTML = "&nbsp;";
@@ -206,9 +208,9 @@
                 }
             }
         }
-        function createTableRows() {
+        function createTableRows(numRows) {
             let html = "";
-            for (let i = 0; i < ds; i++) {
+            for (let i = 0; i < numRows; i++) {
                 let hexValue = i.toString(16).toUpperCase().padStart(2, '0');
                 html += `<tr>
                     <td align="center"><span id="pc${i}">${i === 0 ? 'x' : '&nbsp;'}</span></td>
@@ -263,8 +265,14 @@
             options += '<option value="00FF">x00FF (mask)</option>';
             return `<select id="mem${index}">${options}</select>`;
         }
+        function updateTableRows() {
+            numRows = parseInt(document.getElementById("row-count-input").value) || ds;
+            numRows = Math.max(5, Math.min(numRows, 64));
+            document.getElementById("table-body").innerHTML = createTableRows(numRows);
+        }
+
         document.addEventListener("DOMContentLoaded", () => {
-            document.getElementById("table-body").innerHTML = createTableRows();
+            document.getElementById("table-body").innerHTML = createTableRows(ds);
         });
     </script>
 </head>
@@ -274,6 +282,8 @@
     <input type="button" value=" Step " onclick="Step()">
     <input type="button" value=" Reset " onclick="Reset()">
     <input type="button" value=" Reset and Clear Memory " onclick="ResetAndClearMem()">
+    Number of Address (5-64): <input type="number" id="row-count-input" value="64" min="5" max="64">
+    <input type="button" value="Apply" onclick="updateTableRows()">
     <br><br>
     <table border="1" cellspacing="0" cellpadding="5" bordercolor="black">
         <tr>
