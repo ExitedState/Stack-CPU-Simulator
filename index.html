@@ -4,8 +4,8 @@
     <title>Stack CPU Simulator (16-bit)</title>
     <script>
         let pc = 0;
-        let ds = 64;
-        let rs = 64;
+        let ds = 32;
+        let rs = 32;
         function Step() {
             const numRows = parseInt(document.getElementById("row-count-input").value)
             // fetch
@@ -169,7 +169,6 @@
                 rs = parseInt(rs) + 1;
 
             } else if (ir == "opcode16") {		// LIT
-
                 ds = parseInt(ds) - 1;
                 tmp = parseInt(operand, 16).toString(16).toUpperCase();
                 while (tmp.length < 4) tmp = "0" + tmp;
@@ -278,8 +277,9 @@
             let numRows;
             if (savedNumRows) {
                 numRows = parseInt(savedNumRows);
+                document.getElementById("row-count-input").value = numRows;
             } else {
-                numRows = 32; // Default value when first loading the website
+                numRows = 32;
             }
             document.getElementById("table-body").innerHTML = createTableRows(numRows);
             Reset();
