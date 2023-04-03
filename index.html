@@ -270,10 +270,16 @@
             numRows = Math.max(5, Math.min(numRows, 64));
             document.getElementById("table-body").innerHTML = createTableRows(numRows);
             Reset();
+            localStorage.setItem('numRows', numRows);
         }
 
         document.addEventListener("DOMContentLoaded", () => {
-            document.getElementById("table-body").innerHTML = createTableRows(ds);
+            const savedNumRows = localStorage.getItem('numRows');
+            if (savedNumRows) {
+                numRows = parseInt(savedNumRows);
+                document.getElementById("row-count-input").value = numRows;
+            }
+            document.getElementById("table-body").innerHTML = createTableRows(numRows);
             Reset();
         });
     </script>
