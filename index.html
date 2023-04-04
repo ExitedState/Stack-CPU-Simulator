@@ -45,8 +45,8 @@
                 ds = parseInt(ds) + 1;
 
                 n1 = parseInt(document.getElementById("ds" + ds).innerHTML, 16);
-                tmp = ((n1 + n2) & 0xffff).toString(16).toUpperCase();
-                while (tmp.length < 4) tmp = "0" + tmp;
+                tmp = ((n1 + n2) & 0xff).toString(16).toUpperCase();
+                while (tmp.length < 2) tmp = "0" + tmp;
                 document.getElementById("ds" + ds).innerHTML = tmp;
 
             } else if (ir == "opcode2") {		// -
@@ -56,8 +56,8 @@
                 ds = parseInt(ds) + 1;
 
                 n1 = parseInt(document.getElementById("ds" + ds).innerHTML, 16);
-                tmp = ((n1 + ~n2 + 1) & 0xffff).toString(16).toUpperCase();
-                while (tmp.length < 4) tmp = "0" + tmp;
+                tmp = ((n1 + ~n2 + 1) & 0xff).toString(16).toUpperCase();
+                while (tmp.length < 2) tmp = "0" + tmp;
                 document.getElementById("ds" + ds).innerHTML = tmp;
 
             } else if (ir == "opcode3") {		// >R
@@ -71,7 +71,7 @@
 
                 addr = parseInt(document.getElementById("ds" + ds).innerHTML, 16);
                 tmp = document.getElementById("mem" + addr).value;
-                while (tmp.length < 4) tmp = "0" + tmp;
+                while (tmp.length < 2) tmp = "0" + tmp;
                 document.getElementById("ds" + ds).innerHTML = tmp;
 
             } else if (ir == "opcode5") {		// AND
@@ -82,8 +82,8 @@
 
                 n1 = parseInt(document.getElementById("ds" + ds).innerHTML, 16);
 
-                tmp = ((n1 & n2) & 0xffff).toString(16).toUpperCase();
-                while (tmp.length < 4) tmp = "0" + tmp;
+                tmp = ((n1 & n2) & 0xff).toString(16).toUpperCase();
+                while (tmp.length < 2) tmp = "0" + tmp;
                 document.getElementById("ds" + ds).innerHTML = tmp;
 
             } else if (ir == "opcode6") {		// DROP
@@ -104,8 +104,8 @@
 
                 n1 = parseInt(document.getElementById("ds" + ds).innerHTML, 16);
 
-                tmp = ((n1 | n2) & 0xffff).toString(16).toUpperCase();
-                while (tmp.length < 4) tmp = "0" + tmp;
+                tmp = ((n1 | n2) & 0xff).toString(16).toUpperCase();
+                while (tmp.length < 2) tmp = "0" + tmp;
                 document.getElementById("ds" + ds).innerHTML = tmp;
 
             } else if (ir == "opcode9") {		// OVER
@@ -135,8 +135,8 @@
 
                 n1 = parseInt(document.getElementById("ds" + ds).innerHTML, 16);
 
-                tmp = ((n1 ^ n2) & 0xffff).toString(16).toUpperCase();
-                while (tmp.length < 4) tmp = "0" + tmp;
+                tmp = ((n1 ^ n2) & 0xff).toString(16).toUpperCase();
+                while (tmp.length < 2) tmp = "0" + tmp;
                 document.getElementById("ds" + ds).innerHTML = tmp;
 
             } else if (ir == "opcode13") {		// IF
@@ -155,7 +155,7 @@
 
                 rs = parseInt(rs) - 1;
                 tmp = pc.toString(16);
-                while (tmp.length < 4) tmp = "0" + tmp;
+                while (tmp.length < 2) tmp = "0" + tmp;
                 document.getElementById("rs" + rs).innerHTML = tmp;
                 document.getElementById("pc" + pc).innerHTML = "&nbsp;";
                 pc = parseInt(operand, 16);
@@ -172,7 +172,7 @@
             } else if (ir == "opcode16") {		// LIT
                 ds = parseInt(ds) - 1;
                 tmp = parseInt(operand, 16).toString(16).toUpperCase();
-                while (tmp.length < 4) tmp = "0" + tmp;
+                while (tmp.length < 2) tmp = "0" + tmp;
                 document.getElementById("ds" + ds).innerHTML = tmp;
 
             } else if (ir == "opcode17") {		// HALT
@@ -182,7 +182,7 @@
             } else {
 
                 tmp = (pc - 1).toString(16).toUpperCase();
-                while (tmp.length < 4) tmp = "0" + tmp;
+                while (tmp.length < 2) tmp = "0" + tmp;
                 alert("Opcode is not found at address " + tmp);
             }
         }
@@ -219,7 +219,7 @@
 
             // Create the negative hex value options
             for (let i = -31; i <= -1; i++) {
-                let hexValue = (0x10000 + i).toString(16).toUpperCase();
+                let hexValue = (0x100 + i).toString(16).toUpperCase();
                 options += `<option value="${hexValue}">x${hexValue} (${i})</option>`;
             }
 
