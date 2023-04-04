@@ -1,6 +1,7 @@
 <html>
 
 <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=Windows-874">
     <title>Stack CPU Simulator (16-bit)</title>
     <script>
         let pc = 0;
@@ -211,48 +212,31 @@
         }
 
         function createMemorySelect(index) {
-            let options = '';
-            options += `<option value="opcode0">!</option>`;
-            options += `<option value="opcode1">+</option>`;
-            options += `<option value="opcode2">-</option>`;
-            options += `<option value="opcode3">>R</option>`;
-            options += `<option value="opcode4">@</option>`;
-            options += `<option value="opcode5">AND</option>`;
-            options += `<option value="opcode6">DROP</option>`;
-            options += `<option value="opcode7">DUP</option>`;
-            options += `<option value="opcode8">OR</option>`;
-            options += `<option value="opcode9">OVER</option>`;
-            options += `<option value="opcode10">R></option>`;
-            options += `<option value="opcode11">SWAP</option>`;
-            options += `<option value="opcode12">XOR</option>`;
-            options += `<option value="opcode13">IF</option>`;
-            options += `<option value="opcode14">CALL</option>`;
-            options += `<option value="opcode15">EXIT</option>`;
-            options += `<option value="opcode16">LIT</option>`;
-            options += `<option value="opcode17">HALT</option>`;
+            const opcodes = [
+                '!', '+', '-', '>R', '@', 'AND', 'DROP', 'DUP', 'OR', 'OVER', 'R>', 'SWAP', 'XOR', 'IF', 'CALL', 'EXIT', 'LIT', 'HALT'
+            ];
+            let options = opcodes.map((op, i) => `<option value="opcode${i}">${op}</option>`).join('');
+
+            // Create the negative hex value options
             for (let i = -31; i <= -1; i++) {
                 let hexValue = (0x10000 + i).toString(16).toUpperCase();
                 options += `<option value="${hexValue}">x${hexValue} (${i})</option>`;
             }
-            const hexValues = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'];
-            for (let i = 0; i < hexValues.length; i++) {
-                for (let j = 0; j < hexValues.length; j++) {
-                    let value = hexValues[i] + hexValues[j];
-                    let intValue = parseInt(value, 16);
-                    if (intValue > 63) {
-                        break;
-                    }
-                    let hex = `x00${value}`;
-                    let description = `(+${intValue})`;
-                    options += `<option value="${value}">${hex} ${description}</option>`;
-                }
+
+            // Create the positive hex value options
+            for (let i = 0; i < 64; i++) {
+                let value = i.toString(16).padStart(2, '0').toUpperCase();
+                let hex = `x00${value}`;
+                let description = `(+${i})`;
+                options += `<option value="${value}">${hex} ${description}</option>`;
             }
-            options += '<option value="8000">x8000 (mask)</option>';
-            options += '<option value="000F">x000F (mask)</option>';
-            options += '<option value="00F0">x00F0 (mask)</option>';
-            options += '<option value="00FF">x00FF (mask)</option>';
+
+            const masks = ['8000', '000F', '00F0', '00FF'];
+            options += masks.map(mask => `<option value="${mask}">x${mask} (mask)</option>`).join('');
+
             return `<select id="mem${index}">${options}</select>`;
         }
+
 
         function createTableRows(numRows) {
             let html = "";
@@ -278,12 +262,20 @@
         }
 
         function updateTableRows() {
-            numRows = parseInt(document.getElementById("row-count-input").value) || ds;
+            const rowCountInput = document.getElementById("row-count-input");
+            const tableBody = document.getElementById("table-body");
+            const dataStackBody = document.getElementById("data-stack-body");
+            const returnStackBody = document.getElementById("return-stack-body");
+
+            let numRows = parseInt(rowCountInput.value) || ds;
             numRows = Math.max(5, Math.min(numRows, 64));
-            document.getElementById("row-count-input").value = numRows;
-            document.getElementById("table-body").innerHTML = createTableRows(numRows);
-            document.getElementById("data-stack-body").innerHTML = createStackRows(numRows, 'ds');
-            document.getElementById("return-stack-body").innerHTML = createStackRows(numRows, 'rs');
+
+            rowCountInput.value = numRows;
+
+            tableBody.innerHTML = createTableRows(numRows);
+            dataStackBody.innerHTML = createStackRows(numRows, 'ds');
+            returnStackBody.innerHTML = createStackRows(numRows, 'rs');
+
             Reset();
         }
 
@@ -324,7 +316,7 @@
     <input type="button" value="Apply" onclick="updateTableRows()">
     <br><br>
     <div style="display: flex;">
-        <div>
+        <div style="padding-right: 0.5vw;">
             <table border="1" cellspacing="1" cellpadding="5" bordercolor="black"
                 style="position: sticky; top: 0; width: 100%;">
                 <tr>
