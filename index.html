@@ -317,21 +317,30 @@
             const rowCountInput = document.getElementById("row-count-input");
             let numRows = parseInt(rowCountInput.value) || ds;
 
+            let memoryOptionsData = [];
+
             for (let i = 0; i < numRows; i++) {
                 let selectElement = document.getElementById("mem" + i);
                 let selectedIndex = selectElement.selectedIndex;
 
-                localStorage.setItem("mem" + i, selectedIndex);
+                memoryOptionsData.push(selectedIndex);
             }
-            alert("Saved");
+
+            localStorage.setItem("memoryOptionsData", JSON.stringify(memoryOptionsData));
+
+            alert("Memory options saved");
         }
         function loadMemoryOptions(numRows) {
-            for (let i = 0; i < numRows; i++) {
-                let selectElement = document.getElementById("mem" + i);
-                let selectedIndex = localStorage.getItem("mem" + i);
+            let memoryOptionsData = JSON.parse(localStorage.getItem("memoryOptionsData"));
 
-                if (selectedIndex !== null) {
-                    selectElement.selectedIndex = selectedIndex;
+            if (memoryOptionsData !== null) {
+                for (let i = 0; i < numRows; i++) {
+                    let selectElement = document.getElementById("mem" + i);
+                    let selectedIndex = memoryOptionsData[i];
+
+                    if (selectedIndex !== undefined) {
+                        selectElement.selectedIndex = selectedIndex;
+                    }
                 }
             }
         }
