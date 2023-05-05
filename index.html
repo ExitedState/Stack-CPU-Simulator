@@ -218,13 +218,13 @@
             let options = opcodes.map((op, i) => `<option value="opcode${i}">${op}</option>`).join('');
 
             // Create the negative hex value options
-            for (let i = -31; i <= -1; i++) {
+            for (let i = -32; i <= -1; i++) {
                 let hexValue = (0x100 + i).toString(16).toUpperCase();
                 options += `<option value="${hexValue}">x${hexValue} (${i})</option>`;
             }
 
             // Create the positive hex value options
-            for (let i = 0; i < 64; i++) {
+            for (let i = 0; i < 127; i++) {
                 let value = i.toString(16).padStart(2, '0').toUpperCase();
                 let hex = `x${value}`;
                 let description = `(+${i})`;
