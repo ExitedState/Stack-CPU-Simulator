@@ -345,6 +345,10 @@
             }
         }
 
+        function Stop() {
+            halt = true;
+        }
+
         document.addEventListener("DOMContentLoaded", async () => {
             const tableBody = document.getElementById("table-body");
             const dataStackBody = document.getElementById("data-stack-body");
@@ -405,6 +409,7 @@
     <b>Stack CPU Simulator (8-bit)</b><br><br>
     <input type="button" value=" Step " onclick="Step()">
     <input type="button" value="Run" onclick="Run()">
+    <input type="button" value="Stop" onclick="Stop()">
     <input type="button" value=" Reset " onclick="Reset()">
     <input type="button" value=" Reset and Clear Memory " onclick="ResetAndClearMem()">
     <button id="save-button">Save</button>
