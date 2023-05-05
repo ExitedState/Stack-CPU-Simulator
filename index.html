@@ -283,6 +283,7 @@
             document.getElementById("table-body").innerHTML = createTableRows(ds);
             document.getElementById("data-stack-body").innerHTML = createStackRows(ds, 'ds');
             document.getElementById("return-stack-body").innerHTML = createStackRows(ds, 'rs');
+            updateTableRows();
             Reset();
         });
     </script>
@@ -326,7 +327,7 @@
     <input type="button" value=" Step " onclick="Step()">
     <input type="button" value=" Reset " onclick="Reset()">
     <input type="button" value=" Reset and Clear Memory " onclick="ResetAndClearMem()">
-    Number of Address (5-256): <input type="number" id="row-count-input" value="32" min="5" max="256">
+    Number of Address (5-256): <input type="number" id="row-count-input" value="64" min="5" max="256">
     <input type="button" value="Apply" onclick="updateTableRows()">
     <br><br>
     <div style="display: flex;">
