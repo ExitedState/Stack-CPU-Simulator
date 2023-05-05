@@ -257,11 +257,18 @@
             return `<select id="mem${index}">${options}</select>`;
         }
 
-
-        function createTableRows(numRows) {
+        function sleep(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+        async function createTableRows(numRows) {
             let fragment = document.createDocumentFragment();
             let memoryOptions = createMemoryOptions();
+
             for (let i = 0; i < numRows; i++) {
+                if (i % 10 === 0) {
+                    await sleep(0);
+                }
+
                 let hexValue = i.toString(16).toUpperCase().padStart(2, '0');
                 let tr = document.createElement('tr');
                 tr.insertAdjacentHTML('beforeend', `<td align="center" width="35px"><span id="pc${i}">${i === 0 ? 'x' : '&nbsp;'}</span></td>
@@ -282,7 +289,7 @@
             return fragment;
         }
 
-        function updateTableRows() {
+        async function updateTableRows() {
             const rowCountInput = document.getElementById("row-count-input");
             const tableBody = document.getElementById("table-body");
             const dataStackBody = document.getElementById("data-stack-body");
@@ -294,7 +301,7 @@
             rowCountInput.value = numRows;
 
             tableBody.innerHTML = '';
-            tableBody.appendChild(createTableRows(numRows));
+            tableBody.appendChild(await createTableRows(numRows));
             dataStackBody.innerHTML = '';
             dataStackBody.appendChild(createStackRows(numRows, 'ds'));
             returnStackBody.innerHTML = '';
@@ -303,18 +310,18 @@
             Reset();
         }
 
-        document.addEventListener("DOMContentLoaded", () => {
+        document.addEventListener("DOMContentLoaded", async () => {
             const tableBody = document.getElementById("table-body");
             const dataStackBody = document.getElementById("data-stack-body");
             const returnStackBody = document.getElementById("return-stack-body");
 
             tableBody.innerHTML = '';
-            tableBody.appendChild(createTableRows(ds));
+            tableBody.appendChild(await createTableRows(ds));
             dataStackBody.innerHTML = '';
             dataStackBody.appendChild(createStackRows(ds, 'ds'));
             returnStackBody.innerHTML = '';
             returnStackBody.appendChild(createStackRows(ds, 'rs'));
-            updateTableRows();
+            await updateTableRows();
             Reset();
         });
 
