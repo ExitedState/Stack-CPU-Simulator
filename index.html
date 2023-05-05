@@ -176,16 +176,32 @@
                 document.getElementById("ds" + ds).innerHTML = tmp;
 
             } else if (ir == "opcode17") {		// HALT
-
+                halt = true;
                 alert("Halt");
+                return;
 
             } else {
-
                 tmp = (pc - 1).toString(16).toUpperCase();
                 while (tmp.length < 2) tmp = "0" + tmp;
                 alert("Opcode is not found at address " + tmp);
             }
         }
+        function Run() {
+            halt = false;
+
+            function executeNextStep() {
+                try {
+                    if (!halt) {
+                        Step();
+                        setTimeout(executeNextStep, 50);
+                    }
+                } catch (error) {
+                    alert("Error occurred : please check your code");
+                }
+            }
+            executeNextStep();
+        }
+
 
         function Reset() {
             const numRows = parseInt(document.getElementById("row-count-input").value);
@@ -295,36 +311,37 @@
             overflow-y: scroll;
             height: 75vh;
         }
-    
+
         ::-webkit-scrollbar {
             width: 10px;
             height: 10px;
         }
-    
+
         ::-webkit-scrollbar-track {
             background: #f1f1f1;
         }
-    
+
         ::-webkit-scrollbar-thumb {
             background: #888;
         }
-    
+
         ::-webkit-scrollbar-thumb:hover {
             background: #555;
         }
-    
+
         table {
             border-collapse: collapse;
         }
-    
+
         tr:nth-child(odd) {
             background-color: #f2f2f2;
         }
     </style>
-    
-    
+
+
     <b>Stack CPU Simulator (8-bit)</b><br><br>
     <input type="button" value=" Step " onclick="Step()">
+    <input type="button" value="Run" onclick="Run()">
     <input type="button" value=" Reset " onclick="Reset()">
     <input type="button" value=" Reset and Clear Memory " onclick="ResetAndClearMem()">
     Number of Address (5-256): <input type="number" id="row-count-input" value="64" min="5" max="256">
