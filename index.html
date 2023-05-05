@@ -183,7 +183,9 @@
             } else {
                 tmp = (pc - 1).toString(16).toUpperCase();
                 while (tmp.length < 2) tmp = "0" + tmp;
+                halt = true;
                 alert("Opcode is not found at address " + tmp);
+                return;
             }
         }
         function Run() {
@@ -227,20 +229,18 @@
             }
         }
 
-        function createMemorySelect(index) {
+        function createMemoryOptions() {
             const opcodes = [
                 '!', '+', '-', '>R', '@', 'AND', 'DROP', 'DUP', 'OR', 'OVER', 'R>', 'SWAP', 'XOR', 'IF', 'CALL', 'EXIT', 'LIT', 'HALT'
             ];
             let options = opcodes.map((op, i) => `<option value="opcode${i}">${op}</option>`).join('');
 
-            // Create the negative hex value options
             for (let i = -32; i <= -1; i++) {
                 let hexValue = (0x100 + i).toString(16).toUpperCase();
                 options += `<option value="${hexValue}">x${hexValue} (${i})</option>`;
             }
 
-            // Create the positive hex value options
-            for (let i = 0; i < 127; i++) {
+            for (let i = 0; i < 128; i++) {
                 let value = i.toString(16).padStart(2, '0').toUpperCase();
                 let hex = `x${value}`;
                 let description = `(+${i})`;
@@ -250,31 +250,36 @@
             const masks = ['80', '0F', 'F0', 'FF'];
             options += masks.map(mask => `<option value="${mask}">x${mask} (mask)</option>`).join('');
 
+            return options;
+        }
+
+        function createMemorySelect(index, options) {
             return `<select id="mem${index}">${options}</select>`;
         }
 
 
         function createTableRows(numRows) {
-            let html = "";
+            let fragment = document.createDocumentFragment();
+            let memoryOptions = createMemoryOptions();
             for (let i = 0; i < numRows; i++) {
                 let hexValue = i.toString(16).toUpperCase().padStart(2, '0');
-                html += `<tr>
-                    <td align="center" width="35px"><span id="pc${i}">${i === 0 ? 'x' : '&nbsp;'}</span></td>
+                let tr = document.createElement('tr');
+                tr.insertAdjacentHTML('beforeend', `<td align="center" width="35px"><span id="pc${i}">${i === 0 ? 'x' : '&nbsp;'}</span></td>
                     <td align="center" width="78px">x${hexValue}</td>
-                    <td align="center" width="110px">${createMemorySelect(i)}</td>
-                </tr>`;
+                    <td align="center" width="110px">${createMemorySelect(i, memoryOptions)}</td>`);
+                fragment.appendChild(tr);
             }
-            return html;
+            return fragment;
         }
 
         function createStackRows(numRows, idPrefix) {
-            let html = "";
+            let fragment = document.createDocumentFragment();
             for (let i = 0; i < numRows; i++) {
-                html += `<tr>
-                    <td align="center"><span id="${idPrefix}${i}">&nbsp;</span></td>
-                </tr>`;
+                let tr = document.createElement('tr');
+                tr.insertAdjacentHTML('beforeend', `<td align="center"><span id="${idPrefix}${i}">&nbsp;</span></td>`);
+                fragment.appendChild(tr);
             }
-            return html;
+            return fragment;
         }
 
         function updateTableRows() {
@@ -288,20 +293,31 @@
 
             rowCountInput.value = numRows;
 
-            tableBody.innerHTML = createTableRows(numRows);
-            dataStackBody.innerHTML = createStackRows(numRows, 'ds');
-            returnStackBody.innerHTML = createStackRows(numRows, 'rs');
+            tableBody.innerHTML = '';
+            tableBody.appendChild(createTableRows(numRows));
+            dataStackBody.innerHTML = '';
+            dataStackBody.appendChild(createStackRows(numRows, 'ds'));
+            returnStackBody.innerHTML = '';
+            returnStackBody.appendChild(createStackRows(numRows, 'rs'));
 
             Reset();
         }
 
         document.addEventListener("DOMContentLoaded", () => {
-            document.getElementById("table-body").innerHTML = createTableRows(ds);
-            document.getElementById("data-stack-body").innerHTML = createStackRows(ds, 'ds');
-            document.getElementById("return-stack-body").innerHTML = createStackRows(ds, 'rs');
+            const tableBody = document.getElementById("table-body");
+            const dataStackBody = document.getElementById("data-stack-body");
+            const returnStackBody = document.getElementById("return-stack-body");
+
+            tableBody.innerHTML = '';
+            tableBody.appendChild(createTableRows(ds));
+            dataStackBody.innerHTML = '';
+            dataStackBody.appendChild(createStackRows(ds, 'ds'));
+            returnStackBody.innerHTML = '';
+            returnStackBody.appendChild(createStackRows(ds, 'rs'));
             updateTableRows();
             Reset();
         });
+
     </script>
 </head>
 
