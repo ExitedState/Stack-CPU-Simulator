@@ -224,14 +224,14 @@
             }
 
             // Create the positive hex value options
-            for (let i = 0; i < 64; i++) {
+            for (let i = 0; i < 255; i++) {
                 let value = i.toString(16).padStart(2, '0').toUpperCase();
                 let hex = `x00${value}`;
                 let description = `(+${i})`;
                 options += `<option value="${value}">${hex} ${description}</option>`;
             }
 
-            const masks = ['8000', '000F', '00F0', '00FF'];
+            const masks = ['8000', '000F', '00F0', '0F00','F000','00FF','FF00','0FFF','FFF0','FFFF'];
             options += masks.map(mask => `<option value="${mask}">x${mask} (mask)</option>`).join('');
 
             return `<select id="mem${index}">${options}</select>`;
