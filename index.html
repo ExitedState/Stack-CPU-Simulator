@@ -222,6 +222,7 @@
             var confirmation = confirm("Are you sure you want to reset the memory?");
             if (confirmation) {
                 Reset();
+                localStorage.clear();
                 for (var i = 0; i < ds; i++) {
                     var selectElement = document.getElementById("mem" + i);
                     selectElement.selectedIndex = 0; // Reset to the first option
@@ -307,7 +308,32 @@
             returnStackBody.innerHTML = '';
             returnStackBody.appendChild(createStackRows(numRows, 'rs'));
 
+            loadMemoryOptions(numRows); // Load the saved memory options
+
             Reset();
+        }
+
+        function saveMemoryOptions() {
+            const rowCountInput = document.getElementById("row-count-input");
+            let numRows = parseInt(rowCountInput.value) || ds;
+
+            for (let i = 0; i < numRows; i++) {
+                let selectElement = document.getElementById("mem" + i);
+                let selectedIndex = selectElement.selectedIndex;
+
+                localStorage.setItem("mem" + i, selectedIndex);
+            }
+            alert("Saved");
+        }
+        function loadMemoryOptions(numRows) {
+            for (let i = 0; i < numRows; i++) {
+                let selectElement = document.getElementById("mem" + i);
+                let selectedIndex = localStorage.getItem("mem" + i);
+
+                if (selectedIndex !== null) {
+                    selectElement.selectedIndex = selectedIndex;
+                }
+            }
         }
 
         document.addEventListener("DOMContentLoaded", async () => {
@@ -321,6 +347,11 @@
             dataStackBody.appendChild(createStackRows(ds, 'ds'));
             returnStackBody.innerHTML = '';
             returnStackBody.appendChild(createStackRows(ds, 'rs'));
+
+            // Add the Save button event listener
+            const saveButton = document.getElementById("save-button");
+            saveButton.addEventListener("click", saveMemoryOptions);
+
             await updateTableRows();
             Reset();
         });
@@ -367,6 +398,7 @@
     <input type="button" value="Run" onclick="Run()">
     <input type="button" value=" Reset " onclick="Reset()">
     <input type="button" value=" Reset and Clear Memory " onclick="ResetAndClearMem()">
+    <button id="save-button">Save</button>
     Number of Address (5-256): <input type="number" id="row-count-input" value="64" min="5" max="256">
     <input type="button" value="Apply" onclick="updateTableRows()">
     <br><br>
