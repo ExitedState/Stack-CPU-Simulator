@@ -268,7 +268,7 @@
             const returnStackBody = document.getElementById("return-stack-body");
 
             let numRows = parseInt(rowCountInput.value) || ds;
-            numRows = Math.max(5, Math.min(numRows, 64));
+            numRows = Math.max(5, Math.min(numRows, rowCountInput.max));
 
             rowCountInput.value = numRows;
 
@@ -294,25 +294,39 @@
             overflow-y: scroll;
             height: 75vh;
         }
-
+    
         ::-webkit-scrollbar {
-            width: 0px;
-            height: 0px;
+            width: 10px;
+            height: 10px;
         }
-
+    
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+    
+        ::-webkit-scrollbar-thumb {
+            background: #888;
+        }
+    
+        ::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+    
         table {
             border-collapse: collapse;
         }
-
+    
         tr:nth-child(odd) {
             background-color: #f2f2f2;
         }
     </style>
+    
+    
     <b>Stack CPU Simulator (8-bit)</b><br><br>
     <input type="button" value=" Step " onclick="Step()">
     <input type="button" value=" Reset " onclick="Reset()">
     <input type="button" value=" Reset and Clear Memory " onclick="ResetAndClearMem()">
-    Number of Address (5-64): <input type="number" id="row-count-input" value="32" min="5" max="64">
+    Number of Address (5-256): <input type="number" id="row-count-input" value="32" min="5" max="256">
     <input type="button" value="Apply" onclick="updateTableRows()">
     <br><br>
     <div style="display: flex;">
