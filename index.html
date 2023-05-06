@@ -190,7 +190,12 @@
         }
         function Run() {
             halt = false;
-
+            document.getElementById("run-but").disabled = true;
+            document.getElementById("step-but").disabled = true;
+            document.getElementById("reset-but").disabled = true;
+            document.getElementById("clear-but").disabled = true;
+            document.getElementById("appply-but").disabled = true;
+            document.getElementById("save-button").disabled = true;
             function executeNextStep() {
                 try {
                     if (!halt) {
@@ -203,6 +208,16 @@
             }
             executeNextStep();
         }
+        function Stop() {
+            document.getElementById("run-but").disabled = false;
+            document.getElementById("step-but").disabled = false;
+            document.getElementById("reset-but").disabled = false;
+            document.getElementById("clear-but").disabled = false;
+            document.getElementById("appply-but").disabled = false;
+            document.getElementById("save-button").disabled = false;
+            halt = true;
+        }
+
 
 
         function Reset() {
@@ -345,10 +360,6 @@
             }
         }
 
-        function Stop() {
-            halt = true;
-        }
-
         document.addEventListener("DOMContentLoaded", async () => {
             const tableBody = document.getElementById("table-body");
             const dataStackBody = document.getElementById("data-stack-body");
@@ -407,14 +418,14 @@
 
 
     <b>Stack CPU Simulator (8-bit)</b><br><br>
-    <input type="button" value=" Step " onclick="Step()">
-    <input type="button" value="Run" onclick="Run()">
-    <input type="button" value="Stop" onclick="Stop()">
-    <input type="button" value=" Reset " onclick="Reset()">
-    <input type="button" value=" Reset and Clear Memory " onclick="ResetAndClearMem()">
+    <input type="button" id="step-but" value=" Step " onclick="Step()">
+    <input type="button" id="run-but" value=" Run " onclick="Run()">
+    <input type="button" id="stop-but" value=" Stop " onclick="Stop()">
+    <input type="button" id="reset-but" value=" Reset " onclick="Reset()">
+    <input type="button" id="clear-but" value=" Reset and Clear Memory " onclick="ResetAndClearMem()">
     <button id="save-button">Save</button>
     Number of Address (5-256): <input type="number" id="row-count-input" value="64" min="5" max="256">
-    <input type="button" value="Apply" onclick="updateTableRows()">
+    <input type="button" id="appply-but" value="Apply" onclick="updateTableRows()">
     <br><br>
     <div style="display: flex;">
         <div style="padding-right: 0.5vw;">
