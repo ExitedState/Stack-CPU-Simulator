@@ -176,10 +176,9 @@
                 document.getElementById("ds" + ds).innerHTML = tmp;
 
             } else if (ir == "opcode17") {		// HALT
-                halt = true;
                 alert("Halt");
+                Stop();
                 return;
-
             } else {
                 tmp = (pc - 1).toString(16).toUpperCase();
                 while (tmp.length < 2) tmp = "0" + tmp;
@@ -209,13 +208,13 @@
             executeNextStep();
         }
         function Stop() {
+            halt = true;
             document.getElementById("run-but").disabled = false;
             document.getElementById("step-but").disabled = false;
             document.getElementById("reset-but").disabled = false;
             document.getElementById("clear-but").disabled = false;
             document.getElementById("appply-but").disabled = false;
             document.getElementById("save-button").disabled = false;
-            halt = true;
         }
 
 
