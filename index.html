@@ -200,7 +200,7 @@
                 try {
                     if (!halt) {
                         Step();
-                        setTimeout(executeNextStep, 50);
+                        requestAnimationFrame(executeNextStep);
                     }
                 } catch (error) {
                     Stop();
