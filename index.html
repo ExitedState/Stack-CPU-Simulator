@@ -183,6 +183,7 @@
                 tmp = (pc - 1).toString(16).toUpperCase();
                 while (tmp.length < 2) tmp = "0" + tmp;
                 halt = true;
+                Stop();
                 alert("Opcode is not found at address " + tmp);
                 return;
             }
