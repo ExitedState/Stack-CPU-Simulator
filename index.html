@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Stack CPU Simulator</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@300;400;700&display=swap');
+
+        body {
+            font-family: 'Roboto Mono', monospace;
+            background-color: #262626;
+            color: #0ca93a;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            user-select: none;
+        }
+
+        header {
+            background-color: #1a1a1a;
+            border-bottom: 1px solid #0ca93a;
+            padding: 20px 0;
+            text-align: center;
+        }
+
+        header h1 {
+            font-weight: 300;
+            letter-spacing: 2px;
+        }
+
+        #main-content {
+            display: flex;
+            justify-content: space-between;
+            margin: 50px auto;
+            max-width: 800px;
+            gap: 30px;
+        }
+
+        .link-card {
+            background-color: #1a1a1a;
+            border: 1px solid #0ca93a;
+            border-radius: 5px;
+            width: 360px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            transform: translatey(0px);
+            box-shadow: 0 5px 15px 0px rgba(12, 169, 58, 0.6);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .link-card:hover {
+            transform: translatey(-5px);
+            box-shadow: 0 25px 15px 0px rgba(12, 169, 58, 0.2);
+            background-color: #0ca93a;
+            border-color: #0ca93a;
+        }
+
+        .link-card h2 {
+            font-weight: 400;
+            color: #0ca93a;
+            margin-bottom: 15px;
+        }
+
+        .link-card:hover h2 {
+            color: #1a1a1a;
+        }
+
+        .link-card a {
+            display: block;
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: 1;
+            color: transparent;
+        }
+
+        @media (max-width: 768px) {
+            #main-content {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .link-card {
+                width: 100%;
+                max-width: 330px;
+            }
+        }
+
+        .source-code {
+            position: fixed;
+            right: 10px;
+            bottom: 10px;
+            color: #0ca93a;
+        }
+
+        .source-code a {
+            color: #0ca93a;
+            text-decoration: none;
+        }
+
+        .source-code a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>Select version</h1>
+    </header>
+    <div id="main-content">
+        <div class="link-card">
+            <h2>8 bit</h2>
+            <a href="webpage1.html" target="_blank"></a>
+        </div>
+        <div class="link-card">
+            <h2>16 bit</h2>
+            <a href="webpage2.html" target="_blank"></a>
+        </div>
+    </div>
+    <p class="source-code">Source code: <a href="https://github.com/ExitedState/Stack-CPU-Simulator"
+            target="_blank">GitHub</a></p>
+</body>
+
+</html>
