@@ -8,8 +8,8 @@
 
         body {
             font-family: 'Roboto Mono', monospace;
-            background-color: #262626;
-            color: #0ca93a;
+            background-color: #f5f5f5;
+            color: #303030;
             margin: 0;
             padding: 0;
             box-sizing: border-box;
@@ -17,8 +17,8 @@
         }
 
         header {
-            background-color: #1a1a1a;
-            border-bottom: 1px solid #0ca93a;
+            background-color: #e0e0e0;
+            border-bottom: 1px solid #9a9a9a;
             padding: 20px 0;
             text-align: center;
         }
@@ -26,6 +26,7 @@
         header h1 {
             font-weight: 300;
             letter-spacing: 2px;
+            color: #303030;
         }
 
         #main-content {
@@ -37,8 +38,8 @@
         }
 
         .link-card {
-            background-color: #1a1a1a;
-            border: 1px solid #0ca93a;
+            background-color: #e0e0e0;
+            border: 1px solid #9a9a9a;
             border-radius: 5px;
             width: 360px;
             padding: 20px;
@@ -47,25 +48,25 @@
             transition: all 0.3s ease;
             position: relative;
             transform: translatey(0px);
-            box-shadow: 0 5px 15px 0px rgba(12, 169, 58, 0.6);
+            box-shadow: 0 5px 15px 0px rgba(154, 154, 154, 0.6);
             transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
 
         .link-card:hover {
             transform: translatey(-5px);
-            box-shadow: 0 25px 15px 0px rgba(12, 169, 58, 0.2);
-            background-color: #0ca93a;
-            border-color: #0ca93a;
+            box-shadow: 0 25px 15px 0px rgba(154, 154, 154, 0.2);
+            background-color: #9a9a9a;
+            border-color: #9a9a9a;
         }
 
         .link-card h2 {
             font-weight: 400;
-            color: #0ca93a;
+            color: #303030;
             margin-bottom: 15px;
         }
 
         .link-card:hover h2 {
-            color: #1a1a1a;
+            color: #f5f5f5;
         }
 
         .link-card a {
@@ -95,11 +96,11 @@
             position: fixed;
             right: 10px;
             bottom: 10px;
-            color: #0ca93a;
+            color: #9a9a9a;
         }
 
         .source-code a {
-            color: #0ca93a;
+            color: #303030;
             text-decoration: none;
         }
 
@@ -116,11 +117,11 @@
     <div id="main-content">
         <div class="link-card">
             <h2>8 bit</h2>
-            <a href="webpage1.html" target="_blank"></a>
+            <a href="https://stack-cpu-8-bit.netlify.app/"></a>
         </div>
         <div class="link-card">
             <h2>16 bit</h2>
-            <a href="webpage2.html" target="_blank"></a>
+            <a href="https://stack-cpu-16-bit.netlify.app/"></a>
         </div>
     </div>
     <p class="source-code">Source code: <a href="https://github.com/ExitedState/Stack-CPU-Simulator"
