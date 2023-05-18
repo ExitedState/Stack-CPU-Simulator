@@ -194,8 +194,8 @@
             document.getElementById("step-but").disabled = true;
             document.getElementById("reset-but").disabled = true;
             document.getElementById("clear-but").disabled = true;
-            document.getElementById("appply-but").disabled = true;
-            document.getElementById("save-button").disabled = true;
+            // document.getElementById("appply-but").disabled = true;
+            // document.getElementById("save-button").disabled = true;
             function executeNextStep() {
                 try {
                     if (!halt) {
@@ -215,8 +215,8 @@
             document.getElementById("step-but").disabled = false;
             document.getElementById("reset-but").disabled = false;
             document.getElementById("clear-but").disabled = false;
-            document.getElementById("appply-but").disabled = false;
-            document.getElementById("save-button").disabled = false;
+            // document.getElementById("appply-but").disabled = false;
+            // document.getElementById("save-button").disabled = false;
         }
 
 
@@ -361,6 +361,58 @@
             }
         }
 
+        function saveMemoryOptionsToFile() {
+            const rowCountInput = document.getElementById("row-count-input");
+            let numRows = parseInt(rowCountInput.value) || ds;
+
+            let memoryOptionsData = [];
+
+            for (let i = 0; i < numRows; i++) {
+                let selectElement = document.getElementById("mem" + i);
+                let selectedIndex = selectElement.selectedIndex;
+
+                memoryOptionsData.push(selectedIndex);
+            }
+
+            localStorage.setItem("memoryOptionsData", JSON.stringify(memoryOptionsData));
+
+            const fileData = memoryOptionsData.join(',');
+
+            const element = document.createElement('a');
+            element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(fileData));
+            element.setAttribute('download', 'memory.txt');
+            element.style.display = 'none';
+            document.body.appendChild(element);
+            element.click();
+            document.body.removeChild(element);
+        }
+
+        function loadMemoryOptionsFromFile(file) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                const fileData = e.target.result;
+                const memoryOptionsData = fileData.split(',').map(Number);
+
+                const rowCountInput = document.getElementById("row-count-input");
+                let numRows = parseInt(rowCountInput.value) || ds;
+
+                for (let i = 0; i < numRows; i++) {
+                    let selectElement = document.getElementById("mem" + i);
+                    let selectedIndex = memoryOptionsData[i];
+
+                    if (selectedIndex !== undefined) {
+                        selectElement.selectedIndex = selectedIndex;
+                    }
+                }
+
+                localStorage.setItem("memoryOptionsData", JSON.stringify(memoryOptionsData));
+
+                alert("Memory options loaded");
+            };
+
+            reader.readAsText(file);
+        }
+
         document.addEventListener("DOMContentLoaded", async () => {
             const tableBody = document.getElementById("table-body");
             const dataStackBody = document.getElementById("data-stack-body");
@@ -374,8 +426,21 @@
             returnStackBody.appendChild(createStackRows(ds, 'rs'));
 
             // Add the Save button event listener
-            const saveButton = document.getElementById("save-button");
-            saveButton.addEventListener("click", saveMemoryOptions);
+            // const saveButton = document.getElementById("save-button");
+            // saveButton.addEventListener("click", saveMemoryOptions);
+            const rowCountInput = document.getElementById("row-count-input");
+            rowCountInput.addEventListener("change", updateTableRows);
+            const saveToFileButton = document.getElementById("save-to-file-button");
+            saveToFileButton.addEventListener("click", saveMemoryOptionsToFile);
+            const loadFromFileButton = document.getElementById("load-from-file-button");
+            const fileInput = document.getElementById("file-input");
+            loadFromFileButton.addEventListener("click", function () {
+                fileInput.click();
+            });
+            fileInput.addEventListener("change", function () {
+                const file = fileInput.files[0];
+                loadMemoryOptionsFromFile(file);
+            });
 
             await updateTableRows();
             // Reset();
@@ -425,9 +490,12 @@
     <input type="button" id="stop-but" value=" Stop " onclick="Stop()">
     <input type="button" id="reset-but" value=" Reset " onclick="Reset()">
     <input type="button" id="clear-but" value=" Reset and Clear Memory " onclick="ResetAndClearMem()">
-    <button id="save-button">Save</button>
+    <!-- <button id="save-button">Save</button> -->
+    <button id="save-to-file-button">Save to File</button>
+    <button id="load-from-file-button">Load from File</button>
+    <input type="file" id="file-input" style="display: none;">
     Number of Address (5-256): <input type="number" id="row-count-input" value="64" min="5" max="256">
-    <input type="button" id="appply-but" value="Apply" onclick="updateTableRows()">
+    <!-- <input type="button" id="appply-but" value="Apply" onclick="updateTableRows()"> -->
     <br><br>
     <div style="display: flex;">
         <div style="padding-right: 0.5vw;">
