@@ -176,16 +176,50 @@
                 document.getElementById("ds" + ds).innerHTML = tmp;
 
             } else if (ir == "opcode17") {		// HALT
-
                 alert("Halt");
-
+                Stop();
+                return;
             } else {
-
                 tmp = (pc - 1).toString(16).toUpperCase();
                 while (tmp.length < 4) tmp = "0" + tmp;
+                halt = true;
+                Stop();
                 alert("Opcode is not found at address " + tmp);
+                return;
             }
         }
+        function Run() {
+            halt = false;
+            document.getElementById("run-but").disabled = true;
+            document.getElementById("step-but").disabled = true;
+            document.getElementById("reset-but").disabled = true;
+            document.getElementById("clear-but").disabled = true;
+            document.getElementById("appply-but").disabled = true;
+            document.getElementById("save-button").disabled = true;
+            function executeNextStep() {
+                try {
+                    if (!halt) {
+                        Step();
+                        requestAnimationFrame(executeNextStep);
+                    }
+                } catch (error) {
+                    Stop();
+                    alert("Error occurred : please check your code");
+                }
+            }
+            executeNextStep();
+        }
+        function Stop() {
+            halt = true;
+            document.getElementById("run-but").disabled = false;
+            document.getElementById("step-but").disabled = false;
+            document.getElementById("reset-but").disabled = false;
+            document.getElementById("clear-but").disabled = false;
+            document.getElementById("appply-but").disabled = false;
+            document.getElementById("save-button").disabled = false;
+        }
+
+
 
         function Reset() {
             const numRows = parseInt(document.getElementById("row-count-input").value);
@@ -204,6 +238,7 @@
             var confirmation = confirm("Are you sure you want to reset the memory?");
             if (confirmation) {
                 Reset();
+                localStorage.clear();
                 for (var i = 0; i < ds; i++) {
                     var selectElement = document.getElementById("mem" + i);
                     selectElement.selectedIndex = 0; // Reset to the first option
@@ -211,80 +246,141 @@
             }
         }
 
-        function createMemorySelect(index) {
+        function createMemoryOptions() {
             const opcodes = [
                 '!', '+', '-', '>R', '@', 'AND', 'DROP', 'DUP', 'OR', 'OVER', 'R>', 'SWAP', 'XOR', 'IF', 'CALL', 'EXIT', 'LIT', 'HALT'
             ];
             let options = opcodes.map((op, i) => `<option value="opcode${i}">${op}</option>`).join('');
 
-            // Create the negative hex value options
-            for (let i = -31; i <= -1; i++) {
+            for (let i = -32; i <= -1; i++) {
                 let hexValue = (0x10000 + i).toString(16).toUpperCase();
                 options += `<option value="${hexValue}">x${hexValue} (${i})</option>`;
             }
 
-            // Create the positive hex value options
-            for (let i = 0; i < 255; i++) {
+            for (let i = 0; i < 128; i++) {
                 let value = i.toString(16).padStart(2, '0').toUpperCase();
                 let hex = `x00${value}`;
                 let description = `(+${i})`;
                 options += `<option value="${value}">${hex} ${description}</option>`;
             }
 
-            const masks = ['8000', '000F', '00F0', '0F00','F000','00FF','FF00','0FFF','FFF0','FFFF'];
+            const masks = ['FFFF', '8888', '8880', 'FFF0', '8800', 'FF00', '8000', 'F000'];
             options += masks.map(mask => `<option value="${mask}">x${mask} (mask)</option>`).join('');
 
+            return options;
+        }
+
+        function createMemorySelect(index, options) {
             return `<select id="mem${index}">${options}</select>`;
         }
 
+        function sleep(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+        async function createTableRows(numRows) {
+            let fragment = document.createDocumentFragment();
+            let memoryOptions = createMemoryOptions();
 
-        function createTableRows(numRows) {
-            let html = "";
             for (let i = 0; i < numRows; i++) {
+                if (i % 10 === 0) {
+                    await sleep(0);
+                }
+
                 let hexValue = i.toString(16).toUpperCase().padStart(2, '0');
-                html += `<tr>
-                    <td align="center" width="35px"><span id="pc${i}">${i === 0 ? 'x' : '&nbsp;'}</span></td>
+                let tr = document.createElement('tr');
+                tr.insertAdjacentHTML('beforeend', `<td align="center" width="35px"><span id="pc${i}">${i === 0 ? 'x' : '&nbsp;'}</span></td>
                     <td align="center" width="78px">x${hexValue}</td>
-                    <td align="center" width="110px">${createMemorySelect(i)}</td>
-                </tr>`;
+                    <td align="center" width="110px">${createMemorySelect(i, memoryOptions)}</td>`);
+                fragment.appendChild(tr);
             }
-            return html;
+            return fragment;
         }
 
         function createStackRows(numRows, idPrefix) {
-            let html = "";
+            let fragment = document.createDocumentFragment();
             for (let i = 0; i < numRows; i++) {
-                html += `<tr>
-                    <td align="center"><span id="${idPrefix}${i}">&nbsp;</span></td>
-                </tr>`;
+                let tr = document.createElement('tr');
+                tr.insertAdjacentHTML('beforeend', `<td align="center"><span id="${idPrefix}${i}">&nbsp;</span></td>`);
+                fragment.appendChild(tr);
             }
-            return html;
+            return fragment;
         }
 
-        function updateTableRows() {
+        async function updateTableRows() {
             const rowCountInput = document.getElementById("row-count-input");
             const tableBody = document.getElementById("table-body");
             const dataStackBody = document.getElementById("data-stack-body");
             const returnStackBody = document.getElementById("return-stack-body");
 
             let numRows = parseInt(rowCountInput.value) || ds;
-            numRows = Math.max(5, Math.min(numRows, 64));
+            numRows = Math.max(5, Math.min(numRows, rowCountInput.max));
 
             rowCountInput.value = numRows;
 
-            tableBody.innerHTML = createTableRows(numRows);
-            dataStackBody.innerHTML = createStackRows(numRows, 'ds');
-            returnStackBody.innerHTML = createStackRows(numRows, 'rs');
+            tableBody.innerHTML = '';
+            tableBody.appendChild(await createTableRows(numRows));
+            dataStackBody.innerHTML = '';
+            dataStackBody.appendChild(createStackRows(numRows, 'ds'));
+            returnStackBody.innerHTML = '';
+            returnStackBody.appendChild(createStackRows(numRows, 'rs'));
+
+            loadMemoryOptions(numRows); // Load the saved memory options
 
             Reset();
         }
 
-        document.addEventListener("DOMContentLoaded", () => {
-            document.getElementById("table-body").innerHTML = createTableRows(ds);
-            document.getElementById("data-stack-body").innerHTML = createStackRows(ds, 'ds');
-            document.getElementById("return-stack-body").innerHTML = createStackRows(ds, 'rs');
-            Reset();
+        function saveMemoryOptions() {
+            const rowCountInput = document.getElementById("row-count-input");
+            let numRows = parseInt(rowCountInput.value) || ds;
+
+            let memoryOptionsData = [];
+
+            for (let i = 0; i < numRows; i++) {
+                let selectElement = document.getElementById("mem" + i);
+                let selectedIndex = selectElement.selectedIndex;
+
+                memoryOptionsData.push(selectedIndex);
+            }
+
+            localStorage.setItem("memoryOptionsData", JSON.stringify(memoryOptionsData));
+
+            alert("Memory options saved");
+        }
+        function loadMemoryOptions(numRows) {
+            let memoryOptionsData = JSON.parse(localStorage.getItem("memoryOptionsData"));
+
+            if (memoryOptionsData !== null) {
+                for (let i = 0; i < numRows; i++) {
+                    let selectElement = document.getElementById("mem" + i);
+                    let selectedIndex = memoryOptionsData[i];
+
+                    if (selectedIndex !== undefined) {
+                        selectElement.selectedIndex = selectedIndex;
+                    }
+                }
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", async () => {
+            const tableBody = document.getElementById("table-body");
+            const dataStackBody = document.getElementById("data-stack-body");
+            const returnStackBody = document.getElementById("return-stack-body");
+
+            tableBody.innerHTML = '';
+            tableBody.appendChild(await createTableRows(ds));
+            dataStackBody.innerHTML = '';
+            dataStackBody.appendChild(createStackRows(ds, 'ds'));
+            returnStackBody.innerHTML = '';
+            returnStackBody.appendChild(createStackRows(ds, 'rs'));
+
+            // Add the Save button event listener
+            const saveButton = document.getElementById("save-button");
+            saveButton.addEventListener("click", saveMemoryOptions);
+
+            await updateTableRows();
+            // Reset();
         });
+
     </script>
 </head>
 
@@ -296,8 +392,20 @@
         }
 
         ::-webkit-scrollbar {
-            width: 0px;
-            height: 0px;
+            width: 10px;
+            height: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #888;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #555;
         }
 
         table {
@@ -308,12 +416,17 @@
             background-color: #f2f2f2;
         }
     </style>
+
+
     <b>Stack CPU Simulator (16-bit)</b><br><br>
-    <input type="button" value=" Step " onclick="Step()">
-    <input type="button" value=" Reset " onclick="Reset()">
-    <input type="button" value=" Reset and Clear Memory " onclick="ResetAndClearMem()">
-    Number of Address (5-64): <input type="number" id="row-count-input" value="32" min="5" max="64">
-    <input type="button" value="Apply" onclick="updateTableRows()">
+    <input type="button" id="step-but" value=" Step " onclick="Step()">
+    <input type="button" id="run-but" value=" Run " onclick="Run()">
+    <input type="button" id="stop-but" value=" Stop " onclick="Stop()">
+    <input type="button" id="reset-but" value=" Reset " onclick="Reset()">
+    <input type="button" id="clear-but" value=" Reset and Clear Memory " onclick="ResetAndClearMem()">
+    <button id="save-button">Save</button>
+    Number of Address (5-256): <input type="number" id="row-count-input" value="64" min="5" max="256">
+    <input type="button" id="appply-but" value="Apply" onclick="updateTableRows()">
     <br><br>
     <div style="display: flex;">
         <div style="padding-right: 0.5vw;">
