@@ -328,7 +328,7 @@
             loadMemoryOptions(numRows); // Load the saved memory options
 
             Reset();
-            
+
         }
 
         function saveMemoryOptions() {
@@ -480,11 +480,55 @@
         tr:nth-child(odd) {
             background-color: #f2f2f2;
         }
+
+        #loadingScreen {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.8);
+        }
+
+        .loader {
+            border: 16px solid #f3f3f3;
+            border-radius: 50%;
+            border-top: 16px solid #888888;
+            width: 120px;
+            height: 120px;
+            -webkit-animation: spin 2s linear infinite;
+            /* Safari */
+            animation: spin 2s linear infinite;
+        }
+
+        /* Safari */
+        @-webkit-keyframes spin {
+            0% {
+                -webkit-transform: rotate(0deg);
+            }
+
+            100% {
+                -webkit-transform: rotate(360deg);
+            }
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
     </style>
 
-    <div id="loadingScreen"
-        style="position: fixed; left: 0; top: 0; width: 100%; height: 100%; z-index: 1000; background: white;">
-        <p style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">Loading...</p>
+    <div id="loadingScreen">
+        <div class="loader"></div>
     </div>
 
     <b>Stack CPU Simulator (8-bit)</b>
