@@ -1,7 +1,8 @@
-<html>
+<html lang="en">
 
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=Windows-874">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Stack CPU Simulator (8-bit)</title>
     <script>
         let pc = 0;
@@ -494,7 +495,8 @@
     <button id="save-to-file-button">Save to File</button>
     <button id="load-from-file-button">Load from File</button>
     <input type="file" id="file-input" style="display: none;">
-    Number of Address (5-256): <input type="number" id="row-count-input" value="64" min="5" max="256">
+    <label for="row-count-input">Number of Address (5-256):</label>
+    <input type="number" id="row-count-input" value="32" min="5" max="256">
     <!-- <input type="button" id="appply-but" value="Apply" onclick="updateTableRows()"> -->
     <br><br>
     <div style="display: flex;">
@@ -541,7 +543,7 @@
         </div>
     </div>
     <p style="float: right;">Source code : <a href="https://github.com/ExitedState/Stack-CPU-Simulator/tree/8-bit"
-            target="_blank">GitHub</a></p>
+            target="_blank" rel="noopener noreferrer">GitHub</a></p>
 
 </body>
 
