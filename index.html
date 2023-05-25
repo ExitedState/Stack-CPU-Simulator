@@ -275,17 +275,17 @@
             return `<select id="mem${index}">${options}</select>`;
         }
 
-        function sleep(ms) {
-            return new Promise(resolve => setTimeout(resolve, ms));
-        }
+        // function sleep(ms) {
+        //     return new Promise(resolve => setTimeout(resolve, ms));
+        // }
         async function createTableRows(numRows) {
             let fragment = document.createDocumentFragment();
             let memoryOptions = createMemoryOptions();
 
             for (let i = 0; i < numRows; i++) {
-                if (i % 10 === 0) {
-                    await sleep(0);
-                }
+                // if (i % 10 === 0) {
+                //     await sleep(0);
+                // }
 
                 let hexValue = i.toString(16).toUpperCase().padStart(2, '0');
                 let tr = document.createElement('tr');
@@ -426,10 +426,6 @@
             returnStackBody.innerHTML = '';
             returnStackBody.appendChild(createStackRows(ds, 'rs'));
 
-            // Add the Save button event listener
-            // const saveButton = document.getElementById("save-button");
-            // saveButton.addEventListener("click", saveMemoryOptions);
-
             const rowCountInput = document.getElementById("row-count-input");
             rowCountInput.addEventListener("change", updateTableRows);
             const saveToFileButton = document.getElementById("save-to-file-button");
@@ -444,7 +440,6 @@
                 loadMemoryOptionsFromFile(file);
             });
             await updateTableRows();
-            // Reset();
         });
 
     </script>
@@ -496,7 +491,7 @@
     <button id="load-from-file-button">Load from File</button>
     <input type="file" id="file-input" style="display: none;">
     <label for="row-count-input">Number of Address (5-256):</label>
-    <input type="number" id="row-count-input" value="32" min="5" max="256">
+    <input type="number" id="row-count-input" value="64" min="5" max="256">
     <!-- <input type="button" id="appply-but" value="Apply" onclick="updateTableRows()"> -->
     <br><br>
     <div style="display: flex;">
