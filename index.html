@@ -441,9 +441,7 @@
                 loadMemoryOptionsFromFile(file);
             });
             await updateTableRows();
-            setTimeout(() => {
-                document.getElementById("loadingScreen").remove();
-            }, 1000);
+            document.getElementById("loadingScreen").remove();
         });
 
     </script>
