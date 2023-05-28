@@ -20,6 +20,26 @@ Once an instruction execution is complete, the **PC** advances to point to the n
 
 ---
 
+## 📑 Instruction Set Architecture Table
+| Symbol | Description |
+| --------------- | --------------- |
+| LIT    | ```ds.push(oper)```<br>```pc = pc + 2```   | 
+| LOAD (@)    | ```addr = ds.pop()``` <br>```ds.push(mem[addr])```<br>```pc = pc + 1```  | 
+| STORE (!)   | ```addr = ds.pop()```<br>```mem[addr] = ds.pop()```<br>```pc = pc + 1``` | 
+| DROP   |```ds.pop()```<br>```pc = pc + 1```    | 
+| DUP   | ```ds.push(ds.peek())```<br>```pc = pc + 1```    | 
+| OVER   | ```ds.push(ds.nextToPeek())```<br>```pc = pc + 1```    | 
+| SWAP   | ```tmpl = ds.pop()```<br>```tmp2 = ds.pop()```<br>```ds.push(tmpl)```<br>```ds.push(tmp2)```<br>```pc = pc + 1```    | 
+| ADD (+)<br>SUB (-)<br>AND<br>OR<br>XOR   | ```tmp2 = ds.pop()```<br>```tmpl = ds.pop()```<br>```ds.push(tmpl op tmp2)```<br>```pc = pc + 1```   | 
+| IF   | ```tmp = ds.pop()```<br>```if tmp = 0 then```<br>``` pc = oper```<br>```else```<br>``` pc = pc + 2``` | 
+| CALL   | ```pc = oper``` <br>```rs.push(pc + 2)```    | 
+| EXIT   | ```pc = rs.pop()```   | 
+| HALT   | stop cpu   | 
+| >R   | move value from the DS to the RS  | 
+| R>   | move value from the RS to the DS  | 
+
+---
+
 ## :movie_camera: Preview
 
 Check out these simulations in action:
@@ -44,7 +64,7 @@ Check out these simulations in action:
 ---
 
 
-#### :book: Reference
+### :book: Reference
 
 The original version can be found in Course 2301274 [Computer Systems](https://cache111.com/me/2301274.html)
 
