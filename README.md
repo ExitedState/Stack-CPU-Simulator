@@ -1,4 +1,4 @@
-# Stack-CPU-Simulator :computer:
+# Stack-CPU-Simulator
 
 A **Stack CPU** is a fascinating piece of hardware that operates on a unique principle. It primarily comprises of three essential components:
 
@@ -20,7 +20,7 @@ Once an instruction execution is complete, the **PC** advances to point to the n
 
 ---
 
-## 📑 Instruction Set Architecture Table
+## Instruction Set Architecture Table
 | Symbol | Description |
 | --------------- | --------------- |
 | LIT    | ```ds.push(oper)```<br>```pc = pc + 2```   | 
@@ -40,7 +40,7 @@ Once an instruction execution is complete, the **PC** advances to point to the n
 
 ---
 
-## :movie_camera: Preview
+## Preview
 
 Check out these simulations in action:
 
@@ -64,7 +64,7 @@ Check out these simulations in action:
 ---
 
 
-### :book: Reference
+### Reference
 
 The original version can be found in Course 2301274 [Computer Systems](https://cache111.com/me/2301274.html)
 
