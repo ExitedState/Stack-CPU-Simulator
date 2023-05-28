@@ -38,6 +38,9 @@ Check out these simulations in action:
 
 </details>
 
+> Here is an example of a multiplication program that is used in the preview [MUL.txt](https://github.com/ExitedState/Stack-CPU-Simulator/files/11583702/MUL.txt)
+
+
 ---
 
 
