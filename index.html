@@ -195,8 +195,6 @@
             document.getElementById("step-but").disabled = true;
             document.getElementById("reset-but").disabled = true;
             document.getElementById("clear-but").disabled = true;
-            // document.getElementById("appply-but").disabled = true;
-            // document.getElementById("save-button").disabled = true;
             function executeNextStep() {
                 try {
                     if (!halt) {
@@ -216,11 +214,7 @@
             document.getElementById("step-but").disabled = false;
             document.getElementById("reset-but").disabled = false;
             document.getElementById("clear-but").disabled = false;
-            // document.getElementById("appply-but").disabled = false;
-            // document.getElementById("save-button").disabled = false;
         }
-
-
 
         function Reset() {
             const numRows = parseInt(document.getElementById("row-count-input").value);
@@ -275,18 +269,11 @@
             return `<select id="mem${index}">${options}</select>`;
         }
 
-        // function sleep(ms) {
-        //     return new Promise(resolve => setTimeout(resolve, ms));
-        // }
         async function createTableRows(numRows) {
             let fragment = document.createDocumentFragment();
             let memoryOptions = createMemoryOptions();
 
             for (let i = 0; i < numRows; i++) {
-                // if (i % 10 === 0) {
-                //     await sleep(0);
-                // }
-
                 let hexValue = i.toString(16).toUpperCase().padStart(2, '0');
                 let tr = document.createElement('tr');
                 tr.insertAdjacentHTML('beforeend', `<td align="center" width="35px"><span id="pc${i}">${i === 0 ? 'x' : '&nbsp;'}</span></td>
@@ -327,27 +314,10 @@
 
             loadMemoryOptions(numRows); // Load the saved memory options
 
-            Reset();
+            Reset(); //for sync pc
 
         }
 
-        function saveMemoryOptions() {
-            const rowCountInput = document.getElementById("row-count-input");
-            let numRows = parseInt(rowCountInput.value) || ds;
-
-            let memoryOptionsData = [];
-
-            for (let i = 0; i < numRows; i++) {
-                let selectElement = document.getElementById("mem" + i);
-                let selectedIndex = selectElement.selectedIndex;
-
-                memoryOptionsData.push(selectedIndex);
-            }
-
-            localStorage.setItem("memoryOptionsData", JSON.stringify(memoryOptionsData));
-
-            alert("Memory options saved");
-        }
         function loadMemoryOptions(numRows) {
             let memoryOptionsData = JSON.parse(localStorage.getItem("memoryOptionsData"));
 
