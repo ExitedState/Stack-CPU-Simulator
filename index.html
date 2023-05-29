@@ -386,35 +386,42 @@
         }
 
         document.addEventListener("DOMContentLoaded", async () => {
+            // Group DOM element references
             const tableBody = document.getElementById("table-body");
             const dataStackBody = document.getElementById("data-stack-body");
             const returnStackBody = document.getElementById("return-stack-body");
-
-            tableBody.innerHTML = '';
-            tableBody.appendChild(await createTableRows(ds));
-            dataStackBody.innerHTML = '';
-            dataStackBody.appendChild(createStackRows(ds, 'ds'));
-            returnStackBody.innerHTML = '';
-            returnStackBody.appendChild(createStackRows(ds, 'rs'));
-
             const rowCountInput = document.getElementById("row-count-input");
-            rowCountInput.addEventListener("change", updateTableRows);
             const saveToFileButton = document.getElementById("save-to-file-button");
-            saveToFileButton.addEventListener("click", saveMemoryOptionsToFile);
             const loadFromFileButton = document.getElementById("load-from-file-button");
             const fileInput = document.getElementById("file-input");
-            loadFromFileButton.addEventListener("click", function () {
-                fileInput.click();
-            });
-            fileInput.addEventListener("change", function () {
-                const file = fileInput.files[0];
-                loadMemoryOptionsFromFile(file);
-            });
+            const loadingScreen = document.getElementById("loadingScreen");
+
+            // Create table rows and stack rows
+            const tableRows = await createTableRows(ds);
+            const stackRows = createStackRows(ds, 'ds');
+            const returnStackRows = createStackRows(ds, 'rs');
+
+            // Batch DOM updates
+            tableBody.innerHTML = '';
+            dataStackBody.innerHTML = '';
+            returnStackBody.innerHTML = '';
+            tableBody.appendChild(tableRows);
+            dataStackBody.appendChild(stackRows);
+            returnStackBody.appendChild(returnStackRows);
+
+            // Add event listeners
+            rowCountInput.addEventListener("change", updateTableRows);
+            saveToFileButton.addEventListener("click", saveMemoryOptionsToFile);
+            loadFromFileButton.addEventListener("click", () => fileInput.click());
+            fileInput.addEventListener("change", () => loadMemoryOptionsFromFile(fileInput.files[0]));
+
             await updateTableRows();
-            setTimeout(() => {
-                document.getElementById("loadingScreen").remove();
-            }, 1000);
+
+            loadingScreen.remove()
+            // // Remove loading screen after a delay
+            // setTimeout(() => loadingScreen.remove(), 1000);
         });
+
 
     </script>
 </head>
