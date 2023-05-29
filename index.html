@@ -402,7 +402,7 @@
 
             // Add event listeners
             rowCountInput.addEventListener("change", async function () {
-                let confirmation = confirm("This action will reset your memory options. Please save your work krubb");
+                let confirmation = confirm("This action will reset your memory options. Save before continuing?");
                 if (confirmation) {
                     saveMemoryOptions();
                     await updateTableRows();
