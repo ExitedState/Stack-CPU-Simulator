@@ -252,7 +252,7 @@
                 options += `<option value="${hexValue}">x${hexValue} (${i})</option>`;
             }
 
-            for (let i = 0; i < 128; i++) {
+            for (let i = 0; i < 64; i++) {
                 let value = i.toString(16).padStart(2, '0').toUpperCase();
                 let hex = `x${value}`;
                 let description = `(+${i})`;
