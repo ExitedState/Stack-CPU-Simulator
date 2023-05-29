@@ -317,6 +317,21 @@
             Reset(); //for sync pc
 
         }
+        
+        function saveMemoryOptions() {
+            const rowCountInput = document.getElementById("row-count-input");
+            let numRows = parseInt(rowCountInput.value) || ds;
+
+            let memoryOptionsData = [];
+
+            for (let i = 0; i < numRows; i++) {
+                let selectElement = document.getElementById("mem" + i);
+                let selectedIndex = selectElement.selectedIndex;
+
+                memoryOptionsData.push(selectedIndex);
+            }
+            localStorage.setItem("memoryOptionsData", JSON.stringify(memoryOptionsData));
+        }
 
         function loadMemoryOptions(numRows) {
             let memoryOptionsData = JSON.parse(localStorage.getItem("memoryOptionsData"));
