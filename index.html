@@ -195,8 +195,6 @@
             document.getElementById("step-but").disabled = true;
             document.getElementById("reset-but").disabled = true;
             document.getElementById("clear-but").disabled = true;
-            // document.getElementById("appply-but").disabled = true;
-            // document.getElementById("save-button").disabled = true;
             function executeNextStep() {
                 try {
                     if (!halt) {
@@ -216,11 +214,7 @@
             document.getElementById("step-but").disabled = false;
             document.getElementById("reset-but").disabled = false;
             document.getElementById("clear-but").disabled = false;
-            // document.getElementById("appply-but").disabled = false;
-            // document.getElementById("save-button").disabled = false;
         }
-
-
 
         function Reset() {
             const numRows = parseInt(document.getElementById("row-count-input").value);
@@ -258,7 +252,7 @@
                 options += `<option value="${hexValue}">x${hexValue} (${i})</option>`;
             }
 
-            for (let i = 0; i < 128; i++) {
+            for (let i = 0; i < 64; i++) {
                 let value = i.toString(16).padStart(2, '0').toUpperCase();
                 let hex = `x${value}`;
                 let description = `(+${i})`;
@@ -275,18 +269,11 @@
             return `<select id="mem${index}">${options}</select>`;
         }
 
-        // function sleep(ms) {
-        //     return new Promise(resolve => setTimeout(resolve, ms));
-        // }
         async function createTableRows(numRows) {
             let fragment = document.createDocumentFragment();
             let memoryOptions = createMemoryOptions();
 
             for (let i = 0; i < numRows; i++) {
-                // if (i % 10 === 0) {
-                //     await sleep(0);
-                // }
-
                 let hexValue = i.toString(16).toUpperCase().padStart(2, '0');
                 let tr = document.createElement('tr');
                 tr.insertAdjacentHTML('beforeend', `<td align="center" width="35px"><span id="pc${i}">${i === 0 ? 'x' : '&nbsp;'}</span></td>
@@ -327,27 +314,10 @@
 
             loadMemoryOptions(numRows); // Load the saved memory options
 
-            Reset();
+            Reset(); //for sync pc
 
         }
 
-        function saveMemoryOptions() {
-            const rowCountInput = document.getElementById("row-count-input");
-            let numRows = parseInt(rowCountInput.value) || ds;
-
-            let memoryOptionsData = [];
-
-            for (let i = 0; i < numRows; i++) {
-                let selectElement = document.getElementById("mem" + i);
-                let selectedIndex = selectElement.selectedIndex;
-
-                memoryOptionsData.push(selectedIndex);
-            }
-
-            localStorage.setItem("memoryOptionsData", JSON.stringify(memoryOptionsData));
-
-            alert("Memory options saved");
-        }
         function loadMemoryOptions(numRows) {
             let memoryOptionsData = JSON.parse(localStorage.getItem("memoryOptionsData"));
 
@@ -416,35 +386,41 @@
         }
 
         document.addEventListener("DOMContentLoaded", async () => {
+            // Group DOM element references
             const tableBody = document.getElementById("table-body");
             const dataStackBody = document.getElementById("data-stack-body");
             const returnStackBody = document.getElementById("return-stack-body");
-
-            tableBody.innerHTML = '';
-            tableBody.appendChild(await createTableRows(ds));
-            dataStackBody.innerHTML = '';
-            dataStackBody.appendChild(createStackRows(ds, 'ds'));
-            returnStackBody.innerHTML = '';
-            returnStackBody.appendChild(createStackRows(ds, 'rs'));
-
             const rowCountInput = document.getElementById("row-count-input");
-            rowCountInput.addEventListener("change", updateTableRows);
             const saveToFileButton = document.getElementById("save-to-file-button");
-            saveToFileButton.addEventListener("click", saveMemoryOptionsToFile);
             const loadFromFileButton = document.getElementById("load-from-file-button");
             const fileInput = document.getElementById("file-input");
-            loadFromFileButton.addEventListener("click", function () {
-                fileInput.click();
-            });
-            fileInput.addEventListener("change", function () {
-                const file = fileInput.files[0];
-                loadMemoryOptionsFromFile(file);
-            });
+            const loadingScreen = document.getElementById("loadingScreen");
+
+            // Create table rows and stack rows
+            const tableRows = await createTableRows(ds);
+            const stackRows = createStackRows(ds, 'ds');
+            const returnStackRows = createStackRows(ds, 'rs');
+
+            // Batch DOM updates
+            tableBody.innerHTML = '';
+            dataStackBody.innerHTML = '';
+            returnStackBody.innerHTML = '';
+            tableBody.appendChild(tableRows);
+            dataStackBody.appendChild(stackRows);
+            returnStackBody.appendChild(returnStackRows);
+
+            // Add event listeners
+            rowCountInput.addEventListener("change", updateTableRows);
+            saveToFileButton.addEventListener("click", saveMemoryOptionsToFile);
+            loadFromFileButton.addEventListener("click", () => fileInput.click());
+            fileInput.addEventListener("change", () => loadMemoryOptionsFromFile(fileInput.files[0]));
+
             await updateTableRows();
-            setTimeout(() => {
-                document.getElementById("loadingScreen").remove();
-            }, 1000);
+
+            // Remove loading screen after a delay
+            setTimeout(() => loadingScreen.remove(), 500);
         });
+
 
     </script>
 </head>
@@ -543,7 +519,7 @@
     <button id="load-from-file-button">Load from File</button>
     <input type="file" id="file-input" style="display: none;">
     <label for="row-count-input">Number of Address (5-256):</label>
-    <input type="number" id="row-count-input" value="64" min="5" max="256">
+    <input type="number" id="row-count-input" value="32" min="5" max="256">
     <!-- <input type="button" id="appply-but" value="Apply" onclick="updateTableRows()"> -->
     <br><br>
     <div style="display: flex;">
