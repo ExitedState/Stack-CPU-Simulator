@@ -323,17 +323,17 @@
 
             localStorage.setItem("memoryOptionsData", JSON.stringify(memoryOptionsData));
         }
-        function loadMemoryOptions(numRows) {
-            let memoryOptionsData = JSON.parse(localStorage.getItem("memoryOptionsData"));
 
-            if (memoryOptionsData !== null) {
-                for (let i = 0; i < numRows; i++) {
-                    let selectElement = document.getElementById("mem" + i);
-                    let selectedIndex = memoryOptionsData[i];
+        let loadedMemoryOptionsData = null;
+        function loadMemoryOptions() {
+            const memoryOptionsData = loadedMemoryOptionsData || JSON.parse(localStorage.getItem("memoryOptionsData")) || [];
 
-                    if (selectedIndex !== undefined) {
-                        selectElement.selectedIndex = selectedIndex;
-                    }
+            const memorySelectElements = Array.from(document.querySelectorAll('[id^="mem"]'));
+            for (let i = 0; i < memorySelectElements.length; i++) {
+                let selectElement = memorySelectElements[i];
+                let selectedIndex = memoryOptionsData[i];
+                if (selectedIndex !== undefined) {
+                    selectElement.selectedIndex = selectedIndex;
                 }
             }
         }
@@ -368,21 +368,8 @@
             const reader = new FileReader();
             reader.onload = function (e) {
                 const fileData = e.target.result;
-                const memoryOptionsData = fileData.split(',').map(Number);
-
-                const rowCountInput = document.getElementById("row-count-input");
-                let numRows = parseInt(rowCountInput.value) || ds;
-
-                for (let i = 0; i < numRows; i++) {
-                    let selectElement = document.getElementById("mem" + i);
-                    let selectedIndex = memoryOptionsData[i];
-
-                    if (selectedIndex !== undefined) {
-                        selectElement.selectedIndex = selectedIndex;
-                    }
-                }
-
-                localStorage.setItem("memoryOptionsData", JSON.stringify(memoryOptionsData));
+                loadedMemoryOptionsData = fileData.split(',').map(Number);
+                loadMemoryOptions();
             };
 
             reader.readAsText(file);
