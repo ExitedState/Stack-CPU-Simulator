@@ -195,8 +195,6 @@
             document.getElementById("step-but").disabled = true;
             document.getElementById("reset-but").disabled = true;
             document.getElementById("clear-but").disabled = true;
-            // document.getElementById("appply-but").disabled = true;
-            // document.getElementById("save-button").disabled = true;
             function executeNextStep() {
                 try {
                     if (!halt) {
@@ -216,11 +214,7 @@
             document.getElementById("step-but").disabled = false;
             document.getElementById("reset-but").disabled = false;
             document.getElementById("clear-but").disabled = false;
-            // document.getElementById("appply-but").disabled = false;
-            // document.getElementById("save-button").disabled = false;
         }
-
-
 
         function Reset() {
             const numRows = parseInt(document.getElementById("row-count-input").value);
@@ -320,39 +314,29 @@
 
             loadMemoryOptions(numRows); // Load the saved memory options
 
-            Reset();
+            Reset(); // sync pc
         }
 
         function saveMemoryOptions() {
-            const rowCountInput = document.getElementById("row-count-input");
-            let numRows = parseInt(rowCountInput.value) || ds;
-
-            let memoryOptionsData = [];
-
-            for (let i = 0; i < numRows; i++) {
-                let selectElement = document.getElementById("mem" + i);
-                let selectedIndex = selectElement.selectedIndex;
-
-                memoryOptionsData.push(selectedIndex);
-            }
+            const memoryOptionsData = Array.from(document.querySelectorAll('[id^="mem"]'))
+                .map(selectElement => selectElement.selectedIndex);
 
             localStorage.setItem("memoryOptionsData", JSON.stringify(memoryOptionsData));
-
-            alert("Memory options saved");
         }
-        function loadMemoryOptions(numRows) {
-            let memoryOptionsData = JSON.parse(localStorage.getItem("memoryOptionsData"));
 
-            if (memoryOptionsData !== null) {
-                for (let i = 0; i < numRows; i++) {
-                    let selectElement = document.getElementById("mem" + i);
-                    let selectedIndex = memoryOptionsData[i];
+        let loadedMemoryOptionsData = null;
+        function loadMemoryOptions() {
+            const memoryOptionsData = loadedMemoryOptionsData || JSON.parse(localStorage.getItem("memoryOptionsData")) || [];
 
-                    if (selectedIndex !== undefined) {
-                        selectElement.selectedIndex = selectedIndex;
-                    }
+            const memorySelectElements = Array.from(document.querySelectorAll('[id^="mem"]'));
+            for (let i = 0; i < memorySelectElements.length; i++) {
+                let selectElement = memorySelectElements[i];
+                let selectedIndex = memoryOptionsData[i];
+                if (selectedIndex !== undefined) {
+                    selectElement.selectedIndex = selectedIndex;
                 }
             }
+            saveMemoryOptions();
         }
 
         function saveMemoryOptionsToFile() {
@@ -385,61 +369,56 @@
             const reader = new FileReader();
             reader.onload = function (e) {
                 const fileData = e.target.result;
-                const memoryOptionsData = fileData.split(',').map(Number);
-
-                const rowCountInput = document.getElementById("row-count-input");
-                let numRows = parseInt(rowCountInput.value) || ds;
-
-                for (let i = 0; i < numRows; i++) {
-                    let selectElement = document.getElementById("mem" + i);
-                    let selectedIndex = memoryOptionsData[i];
-
-                    if (selectedIndex !== undefined) {
-                        selectElement.selectedIndex = selectedIndex;
-                    }
-                }
-
-                localStorage.setItem("memoryOptionsData", JSON.stringify(memoryOptionsData));
-
-                alert("Memory options loaded");
+                loadedMemoryOptionsData = fileData.split(',').map(Number);
+                loadMemoryOptions();
             };
 
             reader.readAsText(file);
         }
 
         document.addEventListener("DOMContentLoaded", async () => {
+            // Group DOM element references
             const tableBody = document.getElementById("table-body");
             const dataStackBody = document.getElementById("data-stack-body");
             const returnStackBody = document.getElementById("return-stack-body");
-
-            tableBody.innerHTML = '';
-            tableBody.appendChild(await createTableRows(ds));
-            dataStackBody.innerHTML = '';
-            dataStackBody.appendChild(createStackRows(ds, 'ds'));
-            returnStackBody.innerHTML = '';
-            returnStackBody.appendChild(createStackRows(ds, 'rs'));
-
-            // Add the Save button event listener
-            // const saveButton = document.getElementById("save-button");
-            // saveButton.addEventListener("click", saveMemoryOptions);
             const rowCountInput = document.getElementById("row-count-input");
-            rowCountInput.addEventListener("change", updateTableRows);
             const saveToFileButton = document.getElementById("save-to-file-button");
-            saveToFileButton.addEventListener("click", saveMemoryOptionsToFile);
             const loadFromFileButton = document.getElementById("load-from-file-button");
             const fileInput = document.getElementById("file-input");
-            loadFromFileButton.addEventListener("click", function () {
-                fileInput.click();
+            const loadingScreen = document.getElementById("loadingScreen");
+
+            // Create table rows and stack rows
+            const tableRows = await createTableRows(ds);
+            const stackRows = createStackRows(ds, 'ds');
+            const returnStackRows = createStackRows(ds, 'rs');
+
+            // Batch DOM updates
+            tableBody.innerHTML = '';
+            dataStackBody.innerHTML = '';
+            returnStackBody.innerHTML = '';
+            tableBody.appendChild(tableRows);
+            dataStackBody.appendChild(stackRows);
+            returnStackBody.appendChild(returnStackRows);
+
+            // Add event listeners
+            rowCountInput.addEventListener("change", async function () {
+                let confirmation = confirm("This action will reset your memory options. Please save your work krubb");
+                if (confirmation) {
+                    saveMemoryOptions();
+                    await updateTableRows();
+                } else {
+                    // If user cancels the action, we revert the value back to the previous one
+                    this.value = this.defaultValue;
+                }
             });
-            fileInput.addEventListener("change", function () {
-                const file = fileInput.files[0];
-                loadMemoryOptionsFromFile(file);
-            });
+            saveToFileButton.addEventListener("click", saveMemoryOptionsToFile);
+            loadFromFileButton.addEventListener("click", () => fileInput.click());
+            fileInput.addEventListener("change", () => loadMemoryOptionsFromFile(fileInput.files[0]));
 
             await updateTableRows();
-            setTimeout(() => {
-                document.getElementById("loadingScreen").remove();
-            }, 1000);
+
+            // Remove loading screen after a delay
+            setTimeout(() => loadingScreen.remove(), 500);
         });
 
     </script>
