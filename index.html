@@ -337,6 +337,7 @@
                     selectElement.selectedIndex = selectedIndex;
                 }
             }
+            saveMemoryOptions();
         }
 
         function saveMemoryOptionsToFile() {
@@ -416,7 +417,6 @@
             fileInput.addEventListener("change", () => loadMemoryOptionsFromFile(fileInput.files[0]));
 
             await updateTableRows();
-
             // Remove loading screen after a delay
             setTimeout(() => loadingScreen.remove(), 500);
         });
