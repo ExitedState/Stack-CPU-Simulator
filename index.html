@@ -318,6 +318,13 @@
 
         }
 
+        function saveMemoryOptions() {
+            const memoryOptionsData = Array.from(document.querySelectorAll('[id^="mem"]'))
+                .map(selectElement => selectElement.selectedIndex);
+
+            localStorage.setItem("memoryOptionsData", JSON.stringify(memoryOptionsData));
+        }
+
         function loadMemoryOptions(numRows) {
             let memoryOptionsData = JSON.parse(localStorage.getItem("memoryOptionsData"));
 
@@ -378,8 +385,6 @@
                 }
 
                 localStorage.setItem("memoryOptionsData", JSON.stringify(memoryOptionsData));
-
-                alert("Memory options loaded");
             };
 
             reader.readAsText(file);
@@ -410,7 +415,11 @@
             returnStackBody.appendChild(returnStackRows);
 
             // Add event listeners
-            rowCountInput.addEventListener("change", updateTableRows);
+            rowCountInput.addEventListener("change", async function () {
+                saveMemoryOptions();
+                await updateTableRows();
+            });
+
             saveToFileButton.addEventListener("click", saveMemoryOptionsToFile);
             loadFromFileButton.addEventListener("click", () => fileInput.click());
             fileInput.addEventListener("change", () => loadMemoryOptionsFromFile(fileInput.files[0]));
