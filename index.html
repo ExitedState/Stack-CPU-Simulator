@@ -401,8 +401,14 @@
 
             // Add event listeners
             rowCountInput.addEventListener("change", async function () {
-                saveMemoryOptions();
-                await updateTableRows();
+                let confirmation = confirm("This action will reset your memory options. Please save your work krubb");
+                if (confirmation) {
+                    saveMemoryOptions();
+                    await updateTableRows();
+                } else {
+                    // If user cancels the action, we revert the value back to the previous one
+                    this.value = this.defaultValue;
+                }
             });
             saveToFileButton.addEventListener("click", saveMemoryOptionsToFile);
             loadFromFileButton.addEventListener("click", () => fileInput.click());
