@@ -44,7 +44,7 @@ Once an instruction execution is complete, the **PC** advances to point to the n
 
 Check out these simulations in action:
 
-<details>
+<details open>
 <summary><b>16 bit</b> - <a href="https://stack-cpu-16-bit.netlify.app/">stack-cpu-16-bit.netlify.app</a></summary>
 
 ![image](https://github.com/ExitedState/Stack-CPU-Simulator/assets/67526393/5773ab11-4f88-4704-8dc6-63e778be4183)
